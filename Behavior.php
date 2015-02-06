@@ -109,7 +109,9 @@ class Behavior extends \yii\base\Behavior
 
             $model->validators[] = $validator;
 
-            $model->{$attr} = UploadedFile::getInstance($model, $attr);
+            if ($file = UploadedFile::getInstance($model, $attr)) {
+                $model->{$attr} = UploadedFile::getInstance($model, $attr);
+            }
         }
     }
 
