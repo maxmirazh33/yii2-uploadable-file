@@ -36,13 +36,12 @@ use Yii;
 class Behavior extends \yii\base\Behavior
 {
     /**
-     * @var array list of attribute as $attributeName => [$options, $fileValidatorOptions]. Options:
-     *  $savePathAlias
-     *  $allowEmpty
-     *  $allowEmptyScenarios
-     *  $urlPrefix
-     *
-     * @see yii\validators\FileValidator
+     * @var array list of attribute as $attributeName => $options. Options:
+     *  $savePathAlias @see maxmirazh33\file\Behavior $savePathAlias
+     *  $allowEmpty @see maxmirazh33\file\Behavior $allowEmpty
+     *  $allowEmptyScenarios @see maxmirazh33\file\Behavior $allowEmptyScenarios
+     *  $urlPrefix @see maxmirazh33\file\Behavior $urlPrefix
+     *  $validatorOptions @see yii\validators\FileValidator
      */
     public $attributes = [];
     /**
@@ -71,7 +70,7 @@ class Behavior extends \yii\base\Behavior
             ActiveRecord::EVENT_BEFORE_INSERT => 'beforeSave',
             ActiveRecord::EVENT_BEFORE_UPDATE => 'beforeSave',
             ActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete',
-            ActiveRecord::EVENT_AFTER_VALIDATE => 'beforeValidate',
+            ActiveRecord::EVENT_BEFORE_VALIDATE => 'beforeValidate',
         ];
     }
 
@@ -101,9 +100,11 @@ class Behavior extends \yii\base\Behavior
                 $validator->skipOnEmpty = $this->allowEmpty || in_array($model->scenario, $this->allowEmptyScenarios);
             }
 
-            foreach ($options as $name => $value) {
-                if (property_exists('\yii\validators\FileValidator', $name)) {
-                    $validator->{$name} = $value;
+            if (isset($options['validatorOptions']) && is_array($options['validatorOptions'])) {
+                foreach ($options['validatorOptions'] as $name => $value) {
+                    if (property_exists('\yii\validators\FileValidator', $name)) {
+                        $validator->{$name} = $value;
+                    }
                 }
             }
 
@@ -218,7 +219,7 @@ class Behavior extends \yii\base\Behavior
     private function deleteFiles($attr)
     {
         $base = $this->getSavePath($attr);
-        $file = $base . $attr;
+        $file = $base . DIRECTORY_SEPARATOR . $this->owner->{$attr};
         if (@is_file($file)) {
             @unlink($file);
         }

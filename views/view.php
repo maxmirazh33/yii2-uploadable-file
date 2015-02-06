@@ -22,7 +22,7 @@ use yii\helpers\Html;
             <?= Html::activeFileInput(
                 $model,
                 $attribute,
-                ['id' => $selector . '-input', 'onchange' => '$("#" + ' . $selector . ' + "-name").html(this.files[0].name);']
+                ['id' => $selector . '-input', 'onchange' => '$("#" + "' . $selector . '" + "-name").html(this.files[0].name);']
             ) ?>
         </div>
     </div>
