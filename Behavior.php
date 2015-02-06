@@ -76,7 +76,7 @@ class Behavior extends \yii\base\Behavior
     /**
      * @inheritdoc
      */
-    public function beforeValidate($event)
+    public function beforeValidate()
     {
         /**
          * @var ActiveRecord $model
@@ -108,13 +108,15 @@ class Behavior extends \yii\base\Behavior
             }
 
             $model->validators[] = $validator;
+
+            $model->{$attr} = UploadedFile::getInstance($model, $attr);
         }
     }
 
     /**
      * @inheritdoc
      */
-    public function beforeSave($event)
+    public function beforeSave()
     {
         /**
          * @var ActiveRecord $model
@@ -147,7 +149,7 @@ class Behavior extends \yii\base\Behavior
     /**
      * @inheritdoc
      */
-    public function beforeDelete($event)
+    public function beforeDelete()
     {
         foreach ($this->attributes as $attr => $options) {
             $this->ensureAttributes($attr, $options);
