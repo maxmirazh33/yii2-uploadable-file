@@ -46,6 +46,8 @@ public function behaviors()
     }
 ```
 
+Don't add rules in your model for used attribute. Validator added automatically.
+
 If your need perfectly file input, then in your view file:
 ```php
 echo $form->field($model, 'file')->widget('maxmirazh33\file\Widget');

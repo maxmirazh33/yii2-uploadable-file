@@ -2,7 +2,6 @@
 
 namespace maxmirazh33\file;
 
-use Imagine\Image\Point;
 use yii\base\InvalidParamException;
 use yii\db\ActiveRecord;
 use yii\validators\FileValidator;
