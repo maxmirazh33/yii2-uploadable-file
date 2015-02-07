@@ -134,6 +134,8 @@ class Behavior extends \yii\base\Behavior
                 $fileName = uniqid() . '.' . $file->extension;
                 $model->{$attr} = $fileName;
                 $file->saveAs($this->getSavePath($attr) . DIRECTORY_SEPARATOR . $fileName);
+            } else {
+                $model->{$attr} = $model->oldAttributes[$attr];
             }
         }
     }

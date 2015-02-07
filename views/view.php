@@ -12,9 +12,9 @@
 use yii\helpers\Html;
 ?>
 
-<div id="<?= $selector ?>" class="form-group uploader">
+<div id="field-<?= $selector ?>" class="form-group uploader">
     <div class="btn btn-default fullinput">
-        <div class="uploader-browse" onclick='$("#<?= $selector ?>-input").click(); return false;'>
+        <div class="uploader-browse" onclick='$("#<?= $selector ?>").click(); return false;'>
             <span class="glyphicon glyphicon-file"></span>
                 <span class="browse-text" id="<?= $selector ?>-name">
                     <?= Yii::t('maxmirazh33/file', 'Select') ?>
@@ -22,7 +22,7 @@ use yii\helpers\Html;
             <?= Html::activeFileInput(
                 $model,
                 $attribute,
-                ['id' => $selector . '-input', 'onchange' => '$("#" + "' . $selector . '" + "-name").html(this.files[0].name);']
+                ['id' => $selector, 'onchange' => '$("#" + "' . $selector . '" + "-name").html(this.files[0].name);']
             ) ?>
         </div>
     </div>
