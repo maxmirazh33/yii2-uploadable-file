@@ -41,21 +41,24 @@ In your model:
 public function behaviors()
     {
         return [
-            'uploadFileBehavior' => [
+            [
                 'class' => \maxmirazh33\file\Behavior::className(),
+                'savePathAlias' => '@web/files/',
+                'urlPrefix' => '/files/',
                 'attributes' => [
-                    'file' => [
-                        'allowEmpty' => true,
+                    'image' => [
+                        'savePathAlias' => '@web/images/',
+                        'urlPrefix' => '/images/',
                     ],
-                    'otherFile',
+                    'file',
                 ],
             ],
-            //other behaviors
+        //other behaviors
         ];
     }
 ```
+Use rules for validate attribute.
 
-Don't add rules in your model for used attribute. Validator added automatically.
 
 If your need perfectly file input, then in your view file:
 ```php

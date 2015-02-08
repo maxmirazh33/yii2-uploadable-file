@@ -17,13 +17,16 @@ use Yii;
  * public function behaviors()
  * {
  *     return [
- *         'uploadFileBehavior' => [
+ *         [
  *              'class' => \maxmirazh33\file\Behavior::className(),
+ *              'savePathAlias' => '@web/files/',
+ *              'urlPrefix' => '/files/',
  *              'attributes' => [
- *                  'file' => [
- *                      'allowEmpty' => true,
+ *                  'image' => [
+ *                      'savePathAlias' => '@web/images/',
+ *                      'urlPrefix' => '/images/',
  *                  ],
- *                  'otherFile',
+ *                  'file',
  *              ],
  *         ],
  *     //other behaviors
@@ -37,24 +40,13 @@ class Behavior extends \yii\base\Behavior
     /**
      * @var array list of attribute as $attributeName => $options. Options:
      *  $savePathAlias @see maxmirazh33\file\Behavior $savePathAlias
-     *  $allowEmpty @see maxmirazh33\file\Behavior $allowEmpty
-     *  $allowEmptyScenarios @see maxmirazh33\file\Behavior $allowEmptyScenarios
      *  $urlPrefix @see maxmirazh33\file\Behavior $urlPrefix
-     *  $validatorOptions @see yii\validators\FileValidator
      */
     public $attributes = [];
     /**
      * @var string. Default @frontend/web/files/className or @app/web/files/className
      */
     public $savePathAlias;
-    /**
-     * @var bool allow don't attach file for all scenarios
-     */
-    public $allowEmpty = false;
-    /**
-     * @var array scenarios, when allow don't attach file
-     */
-    public $allowEmptyScenarios = ['update'];
     /**
      * @var string part of url for file without hostname. Default '/files/className/'
      */
@@ -78,39 +70,10 @@ class Behavior extends \yii\base\Behavior
      */
     public function beforeValidate()
     {
-        /**
-         * @var ActiveRecord $model
-         */
-        $model = $this->owner;
-        $validator = new FileValidator();
-
         foreach ($this->attributes as $attr => $options) {
             $this->ensureAttributes($attr, $options);
-            $validator->attributes = [$attr];
-            $attrAllowEmpty = isset($options['allowEmpty']) ? $options['allowEmpty'] : null;
-            $attrAllowEmptyScenarios = isset($options['allowEmptyScenarios']) ? $options['allowEmptyScenarios'] : null;
-            if (isset($attrAllowEmpty) && isset($attrAllowEmptyScenarios)) {
-                $validator->skipOnEmpty = $attrAllowEmpty || in_array($model->scenario, $attrAllowEmptyScenarios);
-            } elseif (isset($attrAllowEmpty)) {
-                $validator->skipOnEmpty = $attrAllowEmpty;
-            } elseif (isset($attrAllowEmptyScenarios)) {
-                $validator->skipOnEmpty = in_array($model->scenario, $attrAllowEmptyScenarios);
-            } else {
-                $validator->skipOnEmpty = $this->allowEmpty || in_array($model->scenario, $this->allowEmptyScenarios);
-            }
-
-            if (isset($options['validatorOptions']) && is_array($options['validatorOptions'])) {
-                foreach ($options['validatorOptions'] as $name => $value) {
-                    if (property_exists('\yii\validators\FileValidator', $name)) {
-                        $validator->{$name} = $value;
-                    }
-                }
-            }
-
-            $model->validators[] = $validator;
-
-            if ($file = UploadedFile::getInstance($model, $attr)) {
-                $model->{$attr} = $file;
+            if ($file = UploadedFile::getInstance($this->owner, $attr)) {
+                $this->owner->{$attr} = $file;
             }
         }
     }
@@ -120,9 +83,7 @@ class Behavior extends \yii\base\Behavior
      */
     public function beforeSave()
     {
-        /**
-         * @var ActiveRecord $model
-         */
+        /* @var $model ActiveRecord */
         $model = $this->owner;
         foreach ($this->attributes as $attr => $options) {
             $this->ensureAttributes($attr, $options);
@@ -133,7 +94,7 @@ class Behavior extends \yii\base\Behavior
                 }
                 $fileName = uniqid() . '.' . $file->extension;
                 $model->{$attr} = $fileName;
-                $file->saveAs($this->getSavePath($attr) . DIRECTORY_SEPARATOR . $fileName);
+                $file->saveAs($this->getSavePath($attr) . $fileName);
             } else {
                 $model->{$attr} = $model->oldAttributes[$attr];
             }
@@ -196,9 +157,9 @@ class Behavior extends \yii\base\Behavior
         }
 
         if (isset(Yii::$aliases['@frontend'])) {
-            return Yii::getAlias('@frontend/web/files/' . $this->getShortClassName($this->owner));
+            return Yii::getAlias('@frontend/web/files/' . $this->getShortClassName($this->owner)) . DIRECTORY_SEPARATOR;
         } else {
-            return Yii::getAlias('@app/web/files/' . $this->getShortClassName($this->owner));
+            return Yii::getAlias('@app/web/files/' . $this->getShortClassName($this->owner)) . DIRECTORY_SEPARATOR;
         }
     }
 
@@ -224,16 +185,14 @@ class Behavior extends \yii\base\Behavior
     private function deleteFiles($attr)
     {
         $base = $this->getSavePath($attr);
-        /**
-         * @var ActiveRecord $model
-         */
+        /* @var $model ActiveRecord */
         $model = $this->owner;
         if ($model->isNewRecord) {
             $value = $model->{$attr};
         } else {
             $value = $model->oldAttributes[$attr];
         }
-        $file = $base . DIRECTORY_SEPARATOR . $value;
+        $file = $base . $value;
 
         if (@is_file($file)) {
             @unlink($file);
