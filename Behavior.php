@@ -4,7 +4,6 @@ namespace maxmirazh33\file;
 
 use yii\base\InvalidParamException;
 use yii\db\ActiveRecord;
-use yii\validators\FileValidator;
 use yii\web\UploadedFile;
 use Yii;
 
@@ -70,10 +69,12 @@ class Behavior extends \yii\base\Behavior
      */
     public function beforeValidate()
     {
+        /* @var $model ActiveRecord */
+        $model = $this->owner;
         foreach ($this->attributes as $attr => $options) {
             $this->ensureAttributes($attr, $options);
-            if ($file = UploadedFile::getInstance($this->owner, $attr)) {
-                $this->owner->{$attr} = $file;
+            if ($file = UploadedFile::getInstance($model, $attr)) {
+                $model->{$attr} = $file;
             }
         }
     }
