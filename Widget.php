@@ -1,5 +1,4 @@
 <?php
-
 namespace maxmirazh33\file;
 
 use yii\base\InvalidConfigException;

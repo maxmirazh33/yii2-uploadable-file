@@ -1,5 +1,4 @@
 <?php
-
 namespace maxmirazh33\file;
 
 use yii\base\InvalidParamException;
@@ -37,9 +36,9 @@ use Yii;
 class Behavior extends \yii\base\Behavior
 {
     /**
-     * @var array list of attribute as $attributeName => $options. Options:
-     *  $savePathAlias @see maxmirazh33\file\Behavior $savePathAlias
-     *  $urlPrefix @see maxmirazh33\file\Behavior $urlPrefix
+     * @var array list of attribute as attributeName => options. Options:
+     *  $savePathAlias @see maxmirazh33\file\Behavior::$savePathAlias
+     *  $urlPrefix @see maxmirazh33\file\Behavior::$urlPrefix
      */
     public $attributes = [];
     /**
@@ -103,7 +102,7 @@ class Behavior extends \yii\base\Behavior
     }
 
     /**
-     * @param $object
+     * @param ActiveRecord $object
      * @return string
      */
     private function getShortClassName($object)
