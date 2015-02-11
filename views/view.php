@@ -9,6 +9,7 @@
  */
 
 use yii\helpers\Html;
+
 ?>
 
 <div id="field-<?= $selector ?>" class="form-group uploader">

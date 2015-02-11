@@ -65,7 +65,7 @@ class Behavior extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * function for EVENT_BEFORE_VALIDATE
      */
     public function beforeValidate()
     {
@@ -80,7 +80,7 @@ class Behavior extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * function for EVENT_BEFORE_INSERT and EVENT_BEFORE_UPDATE
      */
     public function beforeSave()
     {
@@ -113,7 +113,7 @@ class Behavior extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * function for EVENT_BEFORE_DELETE
      */
     public function beforeDelete()
     {
@@ -147,7 +147,7 @@ class Behavior extends \yii\base\Behavior
 
     /**
      * @param string $attr name of attribute
-     * @return bool|string save path
+     * @return string save path
      */
     private function getSavePath($attr)
     {
@@ -201,7 +201,7 @@ class Behavior extends \yii\base\Behavior
     }
 
     /**
-     * Check, isset attribute or not
+     * Check isset attribute or not
      * @param string $attribute name of attribute
      * @throws InvalidParamException
      */
