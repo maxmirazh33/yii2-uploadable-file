@@ -42,11 +42,11 @@ class Behavior extends \yii\base\Behavior
      */
     public $attributes = [];
     /**
-     * @var string. Default @frontend/web/files/className or @app/web/files/className
+     * @var string. Default '@frontend/web/files/%className%/' or '@app/web/files/%className%'
      */
     public $savePathAlias;
     /**
-     * @var string part of url for file without hostname. Default '/files/className/'
+     * @var string part of url for file without hostname. Default '/files/%className%/'
      */
     public $urlPrefix;
 
