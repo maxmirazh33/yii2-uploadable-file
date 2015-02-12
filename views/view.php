@@ -16,9 +16,9 @@ use yii\helpers\Html;
     <div class="btn btn-default fullinput">
         <div class="uploader-browse" onclick='$("#<?= $selector ?>").click(); return false;'>
             <span class="glyphicon glyphicon-file"></span>
-                <span class="browse-text" id="<?= $selector ?>-name">
-                    <?= Yii::t('maxmirazh33/file', 'Select') ?>
-                </span>
+            <span class="browse-text" id="<?= $selector ?>-name">
+                <?= Yii::t('maxmirazh33/file', 'Select') ?>
+            </span>
             <?= Html::activeFileInput(
                 $model,
                 $attribute,
