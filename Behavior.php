@@ -5,6 +5,7 @@ use yii\base\InvalidParamException;
 use yii\db\ActiveRecord;
 use yii\web\UploadedFile;
 use Yii;
+use yii\helpers\FileHelper;
 
 /**
  * Class model behavior for uploadable files
@@ -139,8 +140,8 @@ class Behavior extends \yii\base\Behavior
     private function createDirIfNotExists($attr)
     {
         $dir = $this->getSavePath($attr);
-        if (!@is_dir($dir)) {
-            @mkdir($dir);
+        if (!is_dir($dir)) {
+            FileHelper::createDirectory($dir);
         }
     }
 
@@ -194,8 +195,8 @@ class Behavior extends \yii\base\Behavior
         }
         $file = $base . $value;
 
-        if (@is_file($file)) {
-            @unlink($file);
+        if (is_file($file)) {
+            unlink($file);
         }
     }
 
