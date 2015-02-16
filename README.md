@@ -64,3 +64,8 @@ If your need perfectly file input, then in your view file:
 ```php
 echo $form->field($model, 'file')->widget('maxmirazh33\file\Widget');
 ```
+
+After, in your view:
+```php
+echo Html::a('myCoolFile', $model->getFileUrl('file'));
+```
