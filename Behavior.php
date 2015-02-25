@@ -125,13 +125,15 @@ class Behavior extends \yii\base\Behavior
 
     /**
      * @param string $attr name of attribute
+     * @param ActiveRecord $object that keep attrribute. Default $this->owner
      * @return string url to image
      */
-    public function getFileUrl($attr)
+    public function getFileUrl($attr, $object = null)
     {
         $this->checkAttrExists($attr);
         $prefix = $this->getUrlPrefix($attr);
-        return $prefix . $this->owner->{$attr};
+        $object = isset($object) ? $object : $this->owner;
+        return $prefix . $object->{$attr};
     }
 
     /**
@@ -167,9 +169,10 @@ class Behavior extends \yii\base\Behavior
 
     /**
      * @param string $attr name of attribute
+     * @param ActiveRecord $object for default prefix
      * @return string url prefix
      */
-    private function getUrlPrefix($attr)
+    private function getUrlPrefix($attr, $object = null)
     {
         if (isset($this->attributes[$attr]['urlPrefix'])) {
             return '/' . trim($this->attributes[$attr]['urlPrefix'], '/') . '/';
@@ -178,7 +181,8 @@ class Behavior extends \yii\base\Behavior
             return '/' . trim($this->urlPrefix, '/') . '/';
         }
 
-        return '/files/' . $this->getShortClassName($this->owner) . '/';
+        $object = isset($object) ? $object : $this->owner;
+        return '/files/' . $this->getShortClassName($object) . '/';
     }
 
     /**

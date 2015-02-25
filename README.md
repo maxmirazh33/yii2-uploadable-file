@@ -59,7 +59,6 @@ public function behaviors()
 ```
 Use rules for validate attribute.
 
-
 If your need perfectly file input, then in your view file:
 ```php
 echo $form->field($model, 'file')->widget('maxmirazh33\file\Widget');
@@ -69,3 +68,9 @@ After, in your view:
 ```php
 echo Html::a('myCoolFile', $model->getFileUrl('file'));
 ```
+
+If you use Advanced App Template and this behavior attached in backend model, than in frontend model add trait
+```php
+use \maxmirazh33\file\GetFileUrlTrait
+```
+and use getFileUrl() method for frontend model too.
