@@ -7,20 +7,26 @@
         "extension",
         "file upload"
     ],
+    "homepage": "https://github.com/maxmirazh33/yii2-uploadable-file",
     "license": "MIT",
     "authors": [
         {
             "name": "Maxim Kolokolnikov",
-            "email": "maxmirazh33@gmail.com"
+            "email": "maxmirazh33@gmail.com",
+            "homepage": "http://kolokolnikov.me"
         }
     ],
+    "support": {
+        "issues": "https://github.com/maxmirazh33/yii2-uploadable-file/issues",
+        "source": "https://github.com/maxmirazh33/yii2-uploadable-file"
+    },
     "require": {
         "yiisoft/yii2": "2.*",
         "yiisoft/yii2-bootstrap": "2.*"
     },
     "autoload": {
         "psr-4": {
-            "maxmirazh33\\file\\": ""
+            "maxmirazh33\\file\\": "src"
         }
     }
 }

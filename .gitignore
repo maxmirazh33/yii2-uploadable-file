@@ -22,3 +22,11 @@ Thumbs.db
 phpunit.phar
 # local phpunit config
 /phpunit.xml
+
+build
+composer.lock
+
+# mac deployment helpers
+switch
+index
+
