@@ -66,7 +66,7 @@ After, in your view:
 echo Html::a('myCoolFile', $model->getFileUrl('file'));
 ```
 
-If you use Advanced App Template and this behavior attached in backend model, than in frontend model add trait
+If you use Advanced App Template and this behavior attached in backend model, then in frontend model add trait
 ```php
 use \maxmirazh33\file\GetFileUrlTrait
 ```
