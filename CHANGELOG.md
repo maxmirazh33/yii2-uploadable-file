@@ -2,6 +2,9 @@
 
 All Notable changes to `yii2-uploadable-file` will be documented in this file
 
+## 2.2.1
+- Fixed issue when file maybe empty
+
 ## 2.2.0
 - Changed extension skeleton
 
