@@ -96,7 +96,7 @@ class Behavior extends \yii\base\Behavior
                 $fileName = uniqid() . '.' . $file->extension;
                 $model->{$attr} = $fileName;
                 $file->saveAs($this->getSavePath($attr) . $fileName);
-            } else {
+            } elseif (isset($model->oldAttributes[$attr])) {
                 $model->{$attr} = $model->oldAttributes[$attr];
             }
         }
