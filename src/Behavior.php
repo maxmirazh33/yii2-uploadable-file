@@ -1,7 +1,9 @@
 <?php
+
 namespace maxmirazh33\file;
 
-use yii\base\InvalidParamException;
+use yii\base\Exception;
+use yii\base\InvalidArgumentException;
 use yii\db\ActiveRecord;
 use yii\web\UploadedFile;
 use Yii;
@@ -33,19 +35,22 @@ use yii\helpers\FileHelper;
  * }
  * ...
  * ```
+ * @property ActiveRecord $owner
  */
 class Behavior extends \yii\base\Behavior
 {
     /**
      * @var array list of attribute as attributeName => options. Options:
-     *  $savePathAlias @see maxmirazh33\file\Behavior::$savePathAlias
-     *  $urlPrefix @see maxmirazh33\file\Behavior::$urlPrefix
+     *  $savePathAlias @see \maxmirazh33\file\Behavior::$savePathAlias
+     *  $urlPrefix @see \maxmirazh33\file\Behavior::$urlPrefix
      */
     public $attributes = [];
+
     /**
      * @var string. Default '@frontend/web/files/%className%/' or '@app/web/files/%className%/'
      */
     public $savePathAlias;
+
     /**
      * @var string part of url for file without hostname. Default '/files/%className%/'
      */
@@ -69,10 +74,9 @@ class Behavior extends \yii\base\Behavior
      */
     public function beforeValidate()
     {
-        /* @var $model ActiveRecord */
         $model = $this->owner;
         foreach ($this->attributes as $attr => $options) {
-            $this->ensureAttributes($attr, $options);
+            self::ensureAttributes($attr, $options);
             if ($file = UploadedFile::getInstance($model, $attr)) {
                 $model->{$attr} = $file;
             }
@@ -84,16 +88,15 @@ class Behavior extends \yii\base\Behavior
      */
     public function beforeSave()
     {
-        /* @var $model ActiveRecord */
         $model = $this->owner;
         foreach ($this->attributes as $attr => $options) {
-            $this->ensureAttributes($attr, $options);
+            self::ensureAttributes($attr, $options);
             if ($file = UploadedFile::getInstance($model, $attr)) {
                 $this->createDirIfNotExists($attr);
                 if (!$model->isNewRecord) {
                     $this->deleteFiles($attr);
                 }
-                $fileName = uniqid() . '.' . $file->extension;
+                $fileName = uniqid('', true) . '.' . $file->extension;
                 $model->{$attr} = $fileName;
                 $file->saveAs($this->getSavePath($attr) . $fileName);
             } elseif (isset($model->oldAttributes[$attr])) {
@@ -105,11 +108,12 @@ class Behavior extends \yii\base\Behavior
     /**
      * @param ActiveRecord $object
      * @return string
+     * @throws \ReflectionException
      */
     private function getShortClassName($object)
     {
-        $object = new \ReflectionClass($object);
-        return mb_strtolower($object->getShortName());
+        $obj = new \ReflectionClass($object);
+        return mb_strtolower($obj->getShortName());
     }
 
     /**
@@ -118,14 +122,14 @@ class Behavior extends \yii\base\Behavior
     public function beforeDelete()
     {
         foreach ($this->attributes as $attr => $options) {
-            $this->ensureAttributes($attr, $options);
+            self::ensureAttributes($attr, $options);
             $this->deleteFiles($attr);
         }
     }
 
     /**
      * @param string $attr name of attribute
-     * @param ActiveRecord $object that keep attrribute. Default $this->owner
+     * @param ActiveRecord $object that keep attribute. Default $this->owner
      * @return string url to image
      */
     public function getFileUrl($attr, $object = null)
@@ -138,6 +142,7 @@ class Behavior extends \yii\base\Behavior
 
     /**
      * @param string $attr name of attribute
+     * @throws Exception
      */
     private function createDirIfNotExists($attr)
     {
@@ -150,6 +155,7 @@ class Behavior extends \yii\base\Behavior
     /**
      * @param string $attr name of attribute
      * @return string save path
+     * @throws \ReflectionException
      */
     private function getSavePath($attr)
     {
@@ -171,6 +177,7 @@ class Behavior extends \yii\base\Behavior
      * @param string $attr name of attribute
      * @param ActiveRecord $object for default prefix
      * @return string url prefix
+     * @throws \ReflectionException
      */
     private function getUrlPrefix($attr, $object = null)
     {
@@ -188,11 +195,11 @@ class Behavior extends \yii\base\Behavior
     /**
      * Delete images
      * @param string $attr name of attribute
+     * @throws \ReflectionException
      */
     private function deleteFiles($attr)
     {
         $base = $this->getSavePath($attr);
-        /* @var $model ActiveRecord */
         $model = $this->owner;
         if ($model->isNewRecord) {
             $value = $model->{$attr};
@@ -209,17 +216,18 @@ class Behavior extends \yii\base\Behavior
     /**
      * Check isset attribute or not
      * @param string $attribute name of attribute
-     * @throws InvalidParamException
+     * @throws InvalidArgumentException
      */
     private function checkAttrExists($attribute)
     {
         foreach ($this->attributes as $attr => $options) {
-            $this->ensureAttributes($attr, $options);
+            self::ensureAttributes($attr, $options);
             if ($attr == $attribute) {
                 return;
             }
         }
-        throw new InvalidParamException();
+
+        throw new InvalidArgumentException('checkAttrExists failed');
     }
 
     /**

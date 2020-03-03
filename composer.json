@@ -21,6 +21,7 @@
         "source": "https://github.com/maxmirazh33/yii2-uploadable-file"
     },
     "require": {
+        "ext-mbstring": "*",
         "yiisoft/yii2": "2.*",
         "yiisoft/yii2-bootstrap": "2.*"
     },
@@ -28,5 +29,11 @@
         "psr-4": {
             "maxmirazh33\\file\\": "src"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
 }

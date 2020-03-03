@@ -1,4 +1,5 @@
 <?php
+
 namespace maxmirazh33\file;
 
 use yii\base\InvalidConfigException;
@@ -64,6 +65,7 @@ class Widget extends InputWidget
 
     /**
      * @return string Widget selector
+     * @throws \ReflectionException
      */
     public function getSelector()
     {
