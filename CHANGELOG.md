@@ -2,6 +2,9 @@
 
 All Notable changes to `yii2-uploadable-file` will be documented in this file
 
+## 2.2.2
+- Use asset-packagist instead of global fxp composer plugin
+
 ## 2.2.1
 - Fixed issue when file maybe empty
 
